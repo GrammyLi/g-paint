@@ -21,14 +21,6 @@ const loadImage = (src, cb) => {
   })
 };
 
-class G {
-  constructor() {}
-  static new(...args) {
-    let i = new this(...args);
-    return i;
-  }
-}
-
 const randomBetween = (start, end) => {
   let n = Math.random() * (end - start + 1)
   return ~~(n + start)

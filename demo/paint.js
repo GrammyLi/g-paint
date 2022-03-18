@@ -10,7 +10,7 @@ class Paint extends Scene {
     // 鼠标在画板上移动事件
     this.moveEvent = MoveEvent.new({ ele: this.canvas });
     // 当前选择的类型
-    this.type = "squarePen";
+    this.type = "moPen";
     
     this.ctx = this.canvas.getContext("2d");
     // 初始化
@@ -22,7 +22,7 @@ class Paint extends Scene {
     // 默认 “第一次点击”
     this.p1 = [];
     this.p2 = [];
-    this.ctx.lineWidth = 5
+    this.ctx.lineWidth = 1
     this.painting = false
     this.positions = []
   }
@@ -78,6 +78,13 @@ class Paint extends Scene {
       this.draw();
     }
   }
+  pen(type, x, y, isMove) {
+    const types = {
+      circlePen: CirclePen,
+      squarePen: SquarePen,
+
+    }
+  }
   circlePen(x, y, isMove = false) {
     // 存位置
     this.positions.push([x, y])
@@ -130,17 +137,66 @@ class Paint extends Scene {
      this.clear()
      this.draw()
   }
+  trianglePen(x, y, isMove = false) {
+    this.positions.push([x, y])
+    if (isMove) {
+      this.p2 = [x, y];
+    }
+    // 添加元素
+    const ps = copy(this.positions)
+    const eles = ps.map(p => {
+      const [x, y] = p
+      const ele = TrianglePen.new(x, y, this.ctx)
+      return ele
+    });
+    if (isMove) {
+      // 如果移动的时候
+      const l = this.elements.length
+      const index = l === 0 ? 0 : l -1
+      this.elements[index] = eles
+    } else {
+      // 如果是第一次点击
+      this.add(eles)
+    }
+    
+    this.clear()
+    this.draw()
+  }
+  moPen(x, y, isMove = false) {
+    this.positions.push([x, y])
+    if (isMove) {
+      this.p2 = [x, y];
+    }
+    // 添加元素
+    const ps = copy(this.positions)
+    const eles = ps.map(p => {
+      const [x, y] = p
+      const ele = MoPen.new(x, y, this.ctx)
+      return ele
+    });
+    if (isMove) {
+      // 如果移动的时候
+      const l = this.elements.length
+      const index = l === 0 ? 0 : l -1
+      this.elements[index] = eles
+    } else {
+      // 如果是第一次点击
+      this.add(eles)
+    }
+    
+    this.clear()
+    this.draw()
+  }
   bindEventMove() {
     const { ctx, moveEvent } = this;
     const m = moveEvent;
+    const types = ['trianglePen', 'circlePen', 'squarePen', 'moPen']
     m.move((event) => {
       const x = event.offsetX;
       const y = event.offsetY;
-      if (this.type === 'circlePen') {
+      if (types.includes(this.type)) {
          this.painting && this[this.type](x, y, true)
-      } else if (this.type === 'squarePen') {
-        this.painting && this[this.type](x, y, true)
-      } else {
+      }  else {
         this[this.type](x, y);
       }
     });
@@ -148,11 +204,8 @@ class Paint extends Scene {
       const x = event.offsetX;
       const y = event.offsetY;
       this.p1 = [x, y];
-      if (this.type === 'circlePen') {
-        this.circlePen(x, y)
-        this.painting = true
-      } else if (this.type === 'squarePen') {
-        this.squarePen(x, y)
+      if (types.includes(this.type)) {
+        this[this.type](x, y)
         this.painting = true
       }
     });
