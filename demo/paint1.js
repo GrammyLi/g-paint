@@ -7,7 +7,7 @@ class Paint extends G {
     this.w = w;
     this.h = h;
     this.setup();
-    // this.insertButtons();
+    this.insertButtons();
     this.bindEvents();
   }
   setup() {
@@ -173,7 +173,7 @@ class Paint extends G {
     this.fill = false;
     this.penColor = "red";
     let w = int(x1 - x2);
-    let h = int(y1 - y2);
+    let h = int(y1 - y2);  
     this.rect(p1, p2);
     const p3 = [x1 + w, y1];
     const p4 = [x1, y1 + h];
@@ -222,7 +222,7 @@ class Paint extends G {
             let [cutX, cutY] = this.cutoutPoints[0];
             let x1 = cutX + moveX;
             let y1 = cutY + moveY;
-            this.firstPoint = [x1, y1];
+            this.firstPoint = [x1, y1]
             ctx.putImageData(this.lowerData, 0, 0);
             ctx.putImageData(this.cutoutData, x1, y1);
             return;
@@ -237,7 +237,7 @@ class Paint extends G {
           this.set();
           let p1 = this.points[0];
           let p2 = [x, y];
-          log("this.type", this.type);
+          log('this.type', this.type)
           this[this.type](p1, p2);
         } else {
           if (this.penTypes.hasOwnProperty(this.type)) {
@@ -279,7 +279,7 @@ class Paint extends G {
             this.cutoutData = this.ctx.getImageData(x1, y1, w, h);
             this.ctx.clearRect(x1, y1, w, h);
             this.lowerData = this.ctx.getImageData(0, 0, this.w, this.h);
-            this.ctx.putImageData(this.cutoutData, x1, y1);
+            this.ctx.putImageData(this.cutoutData, x1, y1)
           }
         } else if (this.points.length === 2) {
           const [p1, p2] = this.points;
@@ -293,7 +293,6 @@ class Paint extends G {
         }
       }
     });
-
     moveEvent.up((event) => {
       // TODO 待优化
       if (
@@ -301,19 +300,16 @@ class Paint extends G {
         this.cutoutInPoints &&
         this.points.length > 2
       ) {
-        let [x1, y1] = this.points[0];
-        let [x2, y2] = this.firstPoint;
-        const w = this.cutoutW;
-        const h = this.cutoutH;
-        this.clear();
-        this.set();
-
+        let [x1, y1] = this.points[0]
+        let [x2, y2] = this.firstPoint
+        const w = this.cutoutW
+        const h = this.cutoutH
+        this.clear()
+        this.set()
         const cutoutData = this.ctx.getImageData(x1, y1, w, h);
-        // const clearData = this.ctx.getImageData(x2, y2, w, h);
-        // this.mergeImage(cutoutData, clearData);
         this.ctx.clearRect(x1, y1, w, h);
-        this.ctx.putImageData(cutoutData, x2, y2);
-
+        this.ctx.putImageData(cutoutData, x2, y2)
+       
         this.points = [];
         // 切割的四个点
         this.cutoutPoints = [];
@@ -337,42 +333,6 @@ class Paint extends G {
       this.typeStatus[this.type] = false;
     });
   }
-  // mergeImage(pixels1, pixels2) {
-  //   log("p1", pixels1);
-  //   log("p2", pixels2);
-  //   const imageCellArray = [];
-  //   let i = 0;
-  //   for (let y = 0; y < pixels1.height; y += 1) {
-  //     for (let x = 0; x < pixels1.width; x += 1) {
-  //       i += 1;
-  //       const posX = x * 4;
-  //       const posY = y * 4;
-  //       const pos = posY * pixels1.width + posX;
-  //       // log('pos', pos)
-  //       // if (pixels1.data[pos + 3] > 128) {
-  //       const red = pixels1.data[pos];
-  //       const green = pixels1.data[pos + 1];
-  //       const blue = pixels1.data[pos + 2];
-  //       const red2 = pixels2.data[pos];
-  //       const green2 = pixels2.data[pos + 1];
-  //       const blue2 = pixels2.data[pos + 2];
-  //       //   const total = red + green + blue;
-  //       //   const averageColorValue = total / 3;
-  //       //   const char = this.convertToChar(averageColorValue);
-  //       let color = "rgb(" + red + "," + green + "," + blue + ")";
-  //       if (color === 'rgb(0,0,0)') {
-  //          color = "rgb(" + red2 + "," + green2 + "," + blue2 + ")";
-  //       }
-  //       // log("color", color);
-  //       //   // if (total > 200) {
-  //       //   //   imageCellArray.push(Cell.new(x, y, char, color, ctx));
-  //       //   // }
-
-  //       // }
-
-  //     }
-  //   }
-  // }
   // 画笔颜色根据画笔类型来定
   penColorByType() {
     if (this.type === "erasering") {
@@ -383,16 +343,7 @@ class Paint extends G {
   bindEventPenType() {
     bindEvent(e(".controls__type"), "click", (event) => {
       const target = event.target;
-      const control = target.closest(".feature");
-      const type = control.dataset.type;
-      log("type", type);
-      if (type === "clear") {
-        this.clear();
-        this.save();
-        this.set();
-        return;
-      }
-      this.type = type;
+      this.type = target.dataset.type;
       log("this.type", this.type);
       this.penColorByType();
     });
@@ -457,10 +408,10 @@ class Paint extends G {
   bindEvents() {
     this.bindEventPenMove();
     this.bindEventPenType();
-    // this.bindEventPenSize();
-    // this.bindEventPenColor();
-    // this.bindEventLineType();
-    // this.test();
+    this.bindEventPenSize();
+    this.bindEventPenColor();
+    this.bindEventLineType();
+    this.test();
   }
   roundRect(ctx, x, y, width, height, radius, fill, stroke) {
     if (typeof stroke === "undefined") {
@@ -501,3 +452,16 @@ class Paint extends G {
     }
   }
 }
+
+// 第一步：
+
+// 第一次点击，点击画红色矩形， 完成
+// 第二次点击，记录四个点，并且保存着四个点
+// 第三次点击，点击判断是否在矩形内部,如果在内部，可以拖拽移动
+// 剩余的数据， 再画选择的矩形，
+
+// 关闭cutout, 清除四个点
+
+// 第二步；
+// 第三次点击，点击判断是否在矩形内部，可以拖拽
+// 如果点击外部，则取消 cutout
