@@ -78,7 +78,7 @@ class Paint extends Scene {
       this.draw();
     }
   }
-  pen(type, x, y, isMove) {
+  pen(type, x, y, isMove = false) {
     const types = {
       circlePen: CirclePen,
       squarePen: SquarePen,
@@ -88,6 +88,7 @@ class Paint extends Scene {
   circlePen(x, y, isMove = false) {
     // 存位置
     this.positions.push([x, y])
+    CirclePen.new(x, y, this.ctx).draw()
     if (isMove) {
       this.p2 = [x, y];
     }
@@ -107,13 +108,11 @@ class Paint extends Scene {
       // 如果是第一次点击
       this.add(eles)
     }
-    
-    this.clear()
-    this.draw()
   }
   squarePen(x, y, isMove = false) {
      // 存位置
      this.positions.push([x, y])
+     SquarePen.new(x, y, this.ctx).draw()
      if (isMove) {
        this.p2 = [x, y];
      }
@@ -133,12 +132,10 @@ class Paint extends Scene {
        // 如果是第一次点击
        this.add(eles)
      }
-     
-     this.clear()
-     this.draw()
   }
   trianglePen(x, y, isMove = false) {
     this.positions.push([x, y])
+    TrianglePen.new(x, y, this.ctx).draw()
     if (isMove) {
       this.p2 = [x, y];
     }
@@ -158,12 +155,10 @@ class Paint extends Scene {
       // 如果是第一次点击
       this.add(eles)
     }
-    
-    this.clear()
-    this.draw()
   }
   moPen(x, y, isMove = false) {
     this.positions.push([x, y])
+    MoPen.new(x, y, this.ctx).draw()
     if (isMove) {
       this.p2 = [x, y];
     }
@@ -183,9 +178,6 @@ class Paint extends Scene {
       // 如果是第一次点击
       this.add(eles)
     }
-    
-    this.clear()
-    this.draw()
   }
   bindEventMove() {
     const { ctx, moveEvent } = this;

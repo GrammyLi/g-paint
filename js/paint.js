@@ -408,9 +408,11 @@ class Paint extends G {
   }
   // 画笔的颜色
   bindEventPenColor() {
-    bindEvent(e(".controls__colors"), "click", (event) => {
+    bindEvent(e(".colors"), "click", (event) => {
       const target = event.target;
-      const color = target.style.backgroundColor;
+      log('target', target)
+      const color = target.dataset.color;
+      e('#id-color-current').style.background = color
       this.penColor = color;
     });
   }
@@ -458,7 +460,7 @@ class Paint extends G {
     this.bindEventPenMove();
     this.bindEventPenType();
     // this.bindEventPenSize();
-    // this.bindEventPenColor();
+    this.bindEventPenColor();
     // this.bindEventLineType();
     // this.test();
   }
