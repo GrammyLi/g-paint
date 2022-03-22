@@ -11,7 +11,7 @@ class Paint extends Scene {
     this.moveEvent = MoveEvent.new({ ele: this.canvas });
     // 当前选择的类型
     this.type = "moPen";
-    
+
     this.ctx = this.canvas.getContext("2d");
     // 初始化
     this.setup();
@@ -22,12 +22,12 @@ class Paint extends Scene {
     // 默认 “第一次点击”
     this.p1 = [];
     this.p2 = [];
-    this.ctx.lineWidth = 1
-    this.painting = false
-    this.positions = []
+    this.ctx.lineWidth = 4;
+    this.painting = false;
+    this.positions = [];
   }
   line(x, y) {
-    const { p1, p2, ctx} = this;
+    const { p1, p2, ctx } = this;
     // 已经点击第一次
     if (p1.length > 0) {
       // 如果移动，则需要，先撤销当前先画的元素，然后再画新元素
@@ -40,7 +40,7 @@ class Paint extends Scene {
     }
   }
   rect(x, y) {
-    const { p1, p2, ctx} = this;
+    const { p1, p2, ctx } = this;
     // 已经点击第一次
     if (p1.length > 0) {
       // 如果移动，则需要，先撤销当前先画的元素，然后再画新元素
@@ -53,7 +53,7 @@ class Paint extends Scene {
     }
   }
   circle(x, y) {
-    const { p1, p2, ctx} = this;
+    const { p1, p2, ctx } = this;
     // 已经点击第一次
     if (p1.length > 0) {
       // 如果移动，则需要，先撤销当前先画的元素，然后再画新元素
@@ -66,7 +66,7 @@ class Paint extends Scene {
     }
   }
   ellipse(x, y) {
-    const { p1, p2, ctx} = this;
+    const { p1, p2, ctx } = this;
     // 已经点击第一次
     if (p1.length > 0) {
       // 如果移动，则需要，先撤销当前先画的元素，然后再画新元素
@@ -82,113 +82,43 @@ class Paint extends Scene {
     const types = {
       circlePen: CirclePen,
       squarePen: SquarePen,
-
-    }
-  }
-  circlePen(x, y, isMove = false) {
+      trianglePen: TrianglePen,
+      moPen: MoPen,
+    };
     // 存位置
-    this.positions.push([x, y])
-    CirclePen.new(x, y, this.ctx).draw()
+    this.positions.push([x, y]);
+    types[type].new(x, y, this.ctx).draw();
     if (isMove) {
       this.p2 = [x, y];
     }
     // 添加元素
-    const ps = copy(this.positions)
-    const eles = ps.map(p => {
-      const [x, y] = p
-      const ele = CirclePen.new(x, y, this.ctx)
-      return ele
+    const ps = copy(this.positions);
+    const eles = ps.map((p) => {
+      const [x, y] = p;
+      const ele = types[type].new(x, y, this.ctx);
+      return ele;
     });
     if (isMove) {
       // 如果移动的时候
-      const l = this.elements.length
-      const index = l === 0 ? 0 : l -1
-      this.elements[index] = eles
+      const l = this.elements.length;
+      const index = l === 0 ? 0 : l - 1;
+      this.elements[index] = eles;
     } else {
       // 如果是第一次点击
-      this.add(eles)
+      this.add(eles);
     }
   }
-  squarePen(x, y, isMove = false) {
-     // 存位置
-     this.positions.push([x, y])
-     SquarePen.new(x, y, this.ctx).draw()
-     if (isMove) {
-       this.p2 = [x, y];
-     }
-     // 添加元素
-     const ps = copy(this.positions)
-     const eles = ps.map(p => {
-       const [x, y] = p
-       const ele = SquarePen.new(x, y, this.ctx)
-       return ele
-     });
-     if (isMove) {
-       // 如果移动的时候
-       const l = this.elements.length
-       const index = l === 0 ? 0 : l -1
-       this.elements[index] = eles
-     } else {
-       // 如果是第一次点击
-       this.add(eles)
-     }
-  }
-  trianglePen(x, y, isMove = false) {
-    this.positions.push([x, y])
-    TrianglePen.new(x, y, this.ctx).draw()
-    if (isMove) {
-      this.p2 = [x, y];
-    }
-    // 添加元素
-    const ps = copy(this.positions)
-    const eles = ps.map(p => {
-      const [x, y] = p
-      const ele = TrianglePen.new(x, y, this.ctx)
-      return ele
-    });
-    if (isMove) {
-      // 如果移动的时候
-      const l = this.elements.length
-      const index = l === 0 ? 0 : l -1
-      this.elements[index] = eles
-    } else {
-      // 如果是第一次点击
-      this.add(eles)
-    }
-  }
-  moPen(x, y, isMove = false) {
-    this.positions.push([x, y])
-    MoPen.new(x, y, this.ctx).draw()
-    if (isMove) {
-      this.p2 = [x, y];
-    }
-    // 添加元素
-    const ps = copy(this.positions)
-    const eles = ps.map(p => {
-      const [x, y] = p
-      const ele = MoPen.new(x, y, this.ctx)
-      return ele
-    });
-    if (isMove) {
-      // 如果移动的时候
-      const l = this.elements.length
-      const index = l === 0 ? 0 : l -1
-      this.elements[index] = eles
-    } else {
-      // 如果是第一次点击
-      this.add(eles)
-    }
-  }
+ 
   bindEventMove() {
     const { ctx, moveEvent } = this;
     const m = moveEvent;
-    const types = ['trianglePen', 'circlePen', 'squarePen', 'moPen']
+    const types = ["trianglePen", "circlePen", "squarePen", "moPen"];
     m.move((event) => {
       const x = event.offsetX;
       const y = event.offsetY;
       if (types.includes(this.type)) {
-         this.painting && this[this.type](x, y, true)
-      }  else {
+        this.painting && this.pen(this.type, x, y, true);
+      } else {
         this[this.type](x, y);
       }
     });
@@ -197,8 +127,8 @@ class Paint extends Scene {
       const y = event.offsetY;
       this.p1 = [x, y];
       if (types.includes(this.type)) {
-        this[this.type](x, y)
-        this.painting = true
+        this.pen(this.type, x, y);
+        this.painting = true;
       }
     });
     m.up((event) => {
@@ -207,31 +137,33 @@ class Paint extends Scene {
     });
   }
   bindEventControl() {
-    bindEvent(e('.controls__btns'), 'click', event => {
-      let target = event.target
-      if (target.classList.contains('control__btn')) {
+    bindEvent(e(".controls__btns"), "click", (event) => {
+      let target = event.target;
+      if (target.classList.contains("control__btn")) {
         let type = target.dataset.type;
-        if (type === 'reset') {
-          this.elements.pop()
-          this.clear()
-          this.draw()
+        if (type === "reset") {
+          this.elements.pop();
+          this.clear();
+          this.draw();
+        } else {
+          this.type = type
         }
       }
-    })
+    });
   }
   bindEventPenColor() {
     bindEvent(e(".controls__colors"), "click", (event) => {
       const target = event.target;
       const color = target.style.backgroundColor;
-      log('更新', color)
-      this.ctx.strokeStyle = color
-      this.ctx.fillStyle = color
+      log("更新", color);
+      this.ctx.strokeStyle = color;
+      this.ctx.fillStyle = color;
     });
   }
   bindEvents() {
     this.bindEventMove();
     this.bindEventControl();
-    this.bindEventPenColor()
+    this.bindEventPenColor();
   }
   clear() {
     this.ctx.clearRect(0, 0, this.w, this.h);
